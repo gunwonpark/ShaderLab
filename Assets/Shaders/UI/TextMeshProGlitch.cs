@@ -28,13 +28,6 @@ public class TMPMeshProGlitch : MonoBehaviour
         textComponent.ForceMeshUpdate();
         var textInfo = textComponent.textInfo;
 
-        // 글리치 타이밍 결정 (랜덤하게 발생했다가 멈췄다 함)
-        // PerlinNoise를 사용해 불규칙하지만 자연스러운 흐름 생성
-        float glitchTrigger = Mathf.PerlinNoise(Time.time * speed * 0.2f, 0);
-        bool isGlitching = glitchTrigger < glitchFrequency;
-
-        if (!isGlitching) return; // 글리치 타이밍이 아니면 원본 유지
-
         for (int i = 0; i < textInfo.characterCount; i++)
         {
             var charInfo = textInfo.characterInfo[i];
@@ -52,7 +45,7 @@ public class TMPMeshProGlitch : MonoBehaviour
                 // 핵심 로직: 버텍스의 Y(높이) 값에 따라 노이즈를 생성
                 // 높이가 비슷하면(같은 가로줄이면) 같은 방향으로 찢어짐
                 float scanlineNoise = Mathf.PerlinNoise(vert.y * scanlineScale * 0.01f, Time.time * speed);
-
+                Debug.Log($"Vertex Y: {vert.y}, Scanline Noise: {scanlineNoise}");
                 // 노이즈가 특정 임계값을 넘을 때만 가로(X)로 확 밀어버림
                 if (scanlineNoise > 0.6f)
                 {
